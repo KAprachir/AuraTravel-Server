@@ -5,6 +5,7 @@ import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.js";
 import itinerariesRouter from "./routes/itineraries.js";
 import expensesRouter from "./routes/expenses.js";
+import aiRouter from "./routes/ai.js";
 
 dotenv.config();
 
@@ -21,13 +22,14 @@ app.use(
     credentials: true
   })
 );
-app.use(express.json({ limit: "10mb" })); // Increase limit for base64 file payloads
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Routes
 app.use("/api/auth", authRouter);
 app.use("/api/itineraries", itinerariesRouter);
 app.use("/api/expenses", expensesRouter);
+app.use("/api/ai", aiRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to AuraTravel API" });
