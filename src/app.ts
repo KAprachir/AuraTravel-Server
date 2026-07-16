@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
 import authRouter from "./routes/auth.js";
+import itinerariesRouter from "./routes/itineraries.js";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("/api/itineraries", itinerariesRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to AuraTravel API" });

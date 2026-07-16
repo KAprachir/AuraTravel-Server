@@ -22,8 +22,20 @@ export interface AuthenticatedRequest extends Request {
 
 export const requireAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {
+    // Convert Express Node headers to standard Web Headers
+    const headers = new Headers();
+    Object.entries(req.headers).forEach(([key, val]) => {
+      if (val) {
+        if (Array.isArray(val)) {
+          val.forEach((v) => headers.append(key, v));
+        } else {
+          headers.set(key, val);
+        }
+      }
+    });
+
     const session = await auth.api.getSession({
-      headers: req.headers
+      headers
     });
 
     if (!session) {
