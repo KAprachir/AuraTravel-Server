@@ -75,7 +75,7 @@ export const parseReceipt = async (
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
     // Prepare image/file parameter
     const filePart = {
@@ -148,7 +148,7 @@ export const generateChatResponse = async (
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-3.5-flash" });
 
     const systemPrompt = `
 You are the "AuraTravel Copilot", a premium AI travel assistant integrated into a travel suite application.
