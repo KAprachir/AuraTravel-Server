@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend API for AuraTravel, an Agentic Travel Suite",
   "main": "dist/app.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
