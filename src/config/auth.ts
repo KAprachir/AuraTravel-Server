@@ -18,6 +18,12 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true
   },
-  trustedOrigins: ["http://localhost:3000"]
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || ""
+    }
+  },
+  trustedOrigins: ["http://localhost:3000", process.env.CLIENT_URL].filter(Boolean) as string[]
 });
 export type Auth = typeof auth;
