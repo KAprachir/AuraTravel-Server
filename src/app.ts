@@ -8,6 +8,7 @@ import itinerariesRouter from "./routes/itineraries.js";
 import expensesRouter from "./routes/expenses.js";
 import aiRouter from "./routes/ai.js";
 import usersRouter from "./routes/users.js";
+import bookingsRouter from "./routes/bookings.js";
 
 dotenv.config();
 
@@ -34,6 +35,7 @@ app.use("/api/itineraries", itinerariesRouter);
 app.use("/api/expenses", expensesRouter);
 app.use("/api/ai", aiRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/bookings", bookingsRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to AuraTravel API" });
