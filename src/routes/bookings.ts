@@ -2,6 +2,7 @@ import { Router } from "express";
 import { Booking } from "../models/Booking.js";
 import { Itinerary } from "../models/Itinerary.js";
 import { db } from "../config/auth.js";
+import { ObjectId } from "mongodb";
 import { requireAuth, requireRole, AuthenticatedRequest } from "../middleware/auth.js";
 
 const bookingsRouter = Router();
@@ -94,7 +95,8 @@ bookingsRouter.get("/all", requireAuth, requireRole(["admin"]), async (req, res)
     const plannerIds = Array.from(new Set(bookings.map((b) => b.plannerId)));
     const allUserIds = Array.from(new Set([...travelerIds, ...plannerIds]));
 
-    const users = await db.collection("user").find({ _id: { $in: allUserIds as any[] } }).toArray();
+    const allUserObjectIds = allUserIds.map((id) => new ObjectId(id));
+    const users = await db.collection("user").find({ _id: { $in: allUserObjectIds } }).toArray();
     const userMap = new Map(users.map((u) => [u._id.toString(), u]));
 
     const enrichedBookings = bookings.map((b) => {

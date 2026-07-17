@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { db } from "../config/auth.js";
+import { ObjectId } from "mongodb";
 import { requireAuth, requireRole, AuthenticatedRequest } from "../middleware/auth.js";
 
 const usersRouter = Router();
@@ -46,14 +47,14 @@ usersRouter.patch("/:id/role", requireAuth, requireRole(["admin"]), async (req, 
     // Safety check: Cannot demote the last admin to prevent lockout
     if (role !== "admin") {
       const adminCount = await db.collection("user").countDocuments({ role: "admin" });
-      const targetUser = await db.collection("user").findOne({ _id: userId as any });
+      const targetUser = await db.collection("user").findOne({ _id: new ObjectId(userId) });
       if (targetUser && targetUser.role === "admin" && adminCount <= 1) {
         return res.status(400).json({ error: "Cannot demote the last administrator." });
       }
     }
     
     const result = await db.collection("user").updateOne(
-      { _id: userId as any },
+      { _id: new ObjectId(userId) },
       { $set: { role, updatedAt: new Date() } }
     );
     
@@ -105,7 +106,7 @@ usersRouter.post("/onboarding", requireAuth, async (req: AuthenticatedRequest, r
     }
 
     const result = await db.collection("user").updateOne(
-      { _id: userId as any },
+      { _id: new ObjectId(userId) },
       { $set: updateFields }
     );
 
