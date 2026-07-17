@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Itinerary } from "../models/Itinerary.js";
-import { requireAuth, AuthenticatedRequest } from "../middleware/auth.js";
+import { requireAuth, requireRole, AuthenticatedRequest } from "../middleware/auth.js";
 
 const router = Router();
 
@@ -100,7 +100,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // POST create itinerary
-router.post("/", requireAuth, async (req: AuthenticatedRequest, res) => {
+router.post("/", requireAuth, requireRole(["planner", "admin"]), async (req: AuthenticatedRequest, res) => {
   try {
     const {
       title,
