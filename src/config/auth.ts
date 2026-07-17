@@ -22,6 +22,12 @@ console.log("INITIALIZING BETTER-AUTH WITH:", {
 
 export const auth = betterAuth({
   database: mongodbAdapter(db),
+  advanced: {
+    defaultCookieAttributes: {
+      sameSite: "none",
+      secure: true
+    }
+  },
   emailAndPassword: {
     enabled: true
   },
