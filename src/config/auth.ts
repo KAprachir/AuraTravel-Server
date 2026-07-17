@@ -29,6 +29,37 @@ export const auth = betterAuth({
         required: false,
         defaultValue: "traveler",
         input: false
+      },
+      isOnboarded: {
+        type: "boolean",
+        required: false,
+        defaultValue: false,
+        input: false
+      },
+      travelStyle: {
+        type: "string",
+        required: false,
+        input: false
+      },
+      homeLocation: {
+        type: "string",
+        required: false,
+        input: false
+      },
+      bio: {
+        type: "string",
+        required: false,
+        input: false
+      },
+      yearsOfExperience: {
+        type: "number",
+        required: false,
+        input: false
+      },
+      portfolioUrl: {
+        type: "string",
+        required: false,
+        input: false
       }
     }
   },

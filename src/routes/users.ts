@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { db } from "../config/auth.js";
-import { requireAuth, requireRole } from "../middleware/auth.js";
+import { requireAuth, requireRole, AuthenticatedRequest } from "../middleware/auth.js";
 
 const usersRouter = Router();
 
@@ -65,6 +65,58 @@ usersRouter.patch("/:id/role", requireAuth, requireRole(["admin"]), async (req, 
   } catch (error) {
     console.error("Error updating user role:", error);
     res.status(500).json({ error: "Failed to update user role." });
+  }
+});
+
+// POST user onboarding profile setup
+usersRouter.post("/onboarding", requireAuth, async (req: AuthenticatedRequest, res) => {
+  try {
+    const userId = req.user?.id;
+    const { role, travelStyle, homeLocation, bio, yearsOfExperience, portfolioUrl } = req.body;
+
+    if (!["traveler", "planner"].includes(role)) {
+      return res.status(400).json({ error: "Please select a valid role: Traveler or Planner." });
+    }
+
+    const updateFields: any = {
+      role,
+      isOnboarded: true,
+      updatedAt: new Date()
+    };
+
+    if (role === "traveler") {
+      if (!travelStyle || !homeLocation) {
+        return res.status(400).json({ error: "Please fill out all Traveler onboarding fields." });
+      }
+      updateFields.travelStyle = travelStyle;
+      updateFields.homeLocation = homeLocation;
+      updateFields.bio = "";
+      updateFields.yearsOfExperience = 0;
+      updateFields.portfolioUrl = "";
+    } else {
+      if (!bio || yearsOfExperience === undefined || !portfolioUrl) {
+        return res.status(400).json({ error: "Please fill out all Planner onboarding fields." });
+      }
+      updateFields.bio = bio;
+      updateFields.yearsOfExperience = Number(yearsOfExperience);
+      updateFields.portfolioUrl = portfolioUrl;
+      updateFields.travelStyle = "";
+      updateFields.homeLocation = "";
+    }
+
+    const result = await db.collection("user").updateOne(
+      { _id: userId as any },
+      { $set: updateFields }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    res.json({ message: "Onboarding completed successfully.", user: updateFields });
+  } catch (error) {
+    console.error("Error during user onboarding:", error);
+    res.status(500).json({ error: "Failed to complete profile onboarding." });
   }
 });
 
