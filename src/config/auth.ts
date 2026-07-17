@@ -10,8 +10,8 @@ if (!dbUri) {
   throw new Error("MONGODB_URI is not defined in the environment variables.");
 }
 
-const client = new MongoClient(dbUri);
-const db = client.db();
+export const client = new MongoClient(dbUri);
+export const db = client.db();
 
 console.log("INITIALIZING BETTER-AUTH WITH:", {
   BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
@@ -22,6 +22,16 @@ console.log("INITIALIZING BETTER-AUTH WITH:", {
 
 export const auth = betterAuth({
   database: mongodbAdapter(db),
+  user: {
+    additionalFields: {
+      role: {
+        type: "string",
+        required: false,
+        defaultValue: "traveler",
+        input: false
+      }
+    }
+  },
   advanced: {
     defaultCookieAttributes: {
       sameSite: "none",

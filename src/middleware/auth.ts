@@ -9,6 +9,7 @@ export interface AuthenticatedRequest extends Request {
     emailVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    role?: "traveler" | "planner" | "admin";
   };
   session?: {
     id: string;
@@ -19,6 +20,19 @@ export interface AuthenticatedRequest extends Request {
     updatedAt: Date;
   };
 }
+
+export const requireRole = (allowedRoles: string[]) => {
+  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    if (!req.user) {
+      return res.status(401).json({ error: "Unauthorized. Authentication required." });
+    }
+    const userRole = req.user.role || "traveler";
+    if (!allowedRoles.includes(userRole)) {
+      return res.status(403).json({ error: "Forbidden. Insufficient permissions." });
+    }
+    next();
+  };
+};
 
 export const requireAuth = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   try {

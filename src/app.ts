@@ -7,6 +7,7 @@ import { auth } from "./config/auth.js";
 import itinerariesRouter from "./routes/itineraries.js";
 import expensesRouter from "./routes/expenses.js";
 import aiRouter from "./routes/ai.js";
+import usersRouter from "./routes/users.js";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/itineraries", itinerariesRouter);
 app.use("/api/expenses", expensesRouter);
 app.use("/api/ai", aiRouter);
+app.use("/api/users", usersRouter);
 
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to AuraTravel API" });

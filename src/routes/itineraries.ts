@@ -111,7 +111,8 @@ router.post("/", requireAuth, async (req: AuthenticatedRequest, res) => {
       duration,
       cost,
       category,
-      dailyPlan
+      dailyPlan,
+      isPublic
     } = req.body;
 
     if (
@@ -127,6 +128,13 @@ router.post("/", requireAuth, async (req: AuthenticatedRequest, res) => {
       return res.status(400).json({ error: "Please fill in all required fields" });
     }
 
+    const userRole = req.user?.role || "traveler";
+    const isPublicBool = isPublic !== undefined ? Boolean(isPublic) : true;
+
+    if (isPublicBool && !["planner", "admin"].includes(userRole)) {
+      return res.status(403).json({ error: "Only planners and admins can publish public itineraries." });
+    }
+
     const newItinerary = new Itinerary({
       title,
       shortDescription,
@@ -138,7 +146,8 @@ router.post("/", requireAuth, async (req: AuthenticatedRequest, res) => {
       category,
       dailyPlan: dailyPlan || [],
       creator: req.user?.id,
-      rating: 4.5
+      rating: 4.5,
+      isPublic: isPublicBool
     });
 
     await newItinerary.save();

@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "nodemon src/app.ts"
+    "dev": "nodemon src/app.ts",
+    "make-admin": "node dist/scripts/make-admin.js"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
