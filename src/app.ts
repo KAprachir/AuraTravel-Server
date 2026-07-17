@@ -2,7 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { connectDB } from "./config/db.js";
-import authRouter from "./routes/auth.js";
+import { toNodeHandler } from "better-auth/node";
+import { auth } from "./config/auth.js";
 import itinerariesRouter from "./routes/itineraries.js";
 import expensesRouter from "./routes/expenses.js";
 import aiRouter from "./routes/ai.js";
@@ -10,6 +11,7 @@ import aiRouter from "./routes/ai.js";
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", true);
 const PORT = process.env.PORT || 5000;
 
 // Connect to MongoDB
@@ -26,7 +28,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // Routes
-app.use("/api/auth", authRouter);
+app.all("/api/auth/*", toNodeHandler(auth));
 app.use("/api/itineraries", itinerariesRouter);
 app.use("/api/expenses", expensesRouter);
 app.use("/api/ai", aiRouter);
