@@ -18,6 +18,7 @@ export interface IItinerary extends Document {
   category: "Adventure" | "Beach" | "Cultural" | "Wellness" | "Food" | "Family";
   startDate?: Date;
   isPublic: boolean;
+  status: "pending_approval" | "approved" | "rejected";
   creator: string; // User ID from Better Auth
   dailyPlan: IDailyActivity[];
   createdAt: Date;
@@ -47,6 +48,11 @@ const ItinerarySchema = new Schema<IItinerary>(
     },
     startDate: { type: Date },
     isPublic: { type: Boolean, default: true },
+    status: {
+      type: String,
+      enum: ["pending_approval", "approved", "rejected"],
+      default: "approved"
+    },
     creator: { type: String, required: true },
     dailyPlan: [DailyActivitySchema]
   },

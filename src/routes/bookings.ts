@@ -133,4 +133,26 @@ bookingsRouter.get("/all", requireAuth, requireRole(["admin"]), async (req, res)
   }
 });
 
+// Cancel a booking (Traveler or Admin)
+bookingsRouter.patch("/:id/cancel", requireAuth, async (req: AuthenticatedRequest, res) => {
+  try {
+    const bookingId = req.params.id;
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found." });
+    }
+
+    if (booking.travelerId !== req.user?.id && req.user?.role !== "admin") {
+      return res.status(403).json({ error: "You are not authorized to cancel this booking." });
+    }
+
+    booking.status = "cancelled";
+    await booking.save();
+    res.json({ message: "Booking cancelled successfully.", booking });
+  } catch (error) {
+    console.error("Error cancelling booking:", error);
+    res.status(500).json({ error: "Failed to cancel booking." });
+  }
+});
+
 export default bookingsRouter;

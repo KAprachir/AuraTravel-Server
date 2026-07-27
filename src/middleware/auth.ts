@@ -10,6 +10,7 @@ export interface AuthenticatedRequest extends Request {
     createdAt: Date;
     updatedAt: Date;
     role?: "traveler" | "planner" | "admin";
+    isOnboarded?: boolean;
   };
   session?: {
     id: string;
