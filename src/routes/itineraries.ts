@@ -9,7 +9,10 @@ router.get("/", async (req, res) => {
   try {
     const { search, category, minCost, maxCost, duration, sort, page = "1", limit = "8" } = req.query;
 
-    const query: any = { isPublic: true, status: "approved" };
+    const query: any = {
+      isPublic: true,
+      $or: [{ status: "approved" }, { status: { $exists: false } }, { status: null }]
+    };
 
     if (search) {
       query.$text = { $search: search as string };
