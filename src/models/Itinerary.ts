@@ -19,7 +19,11 @@ export interface IItinerary extends Document {
   startDate?: Date;
   isPublic: boolean;
   status: "pending_approval" | "approved" | "rejected";
-  creator: string; // User ID from Better Auth
+  creator: string; // User ID or email from Better Auth
+  creatorName?: string;
+  creatorBio?: string;
+  creatorAvatar?: string;
+  creatorExperience?: number;
   dailyPlan: IDailyActivity[];
   createdAt: Date;
   updatedAt: Date;
@@ -54,6 +58,10 @@ const ItinerarySchema = new Schema<IItinerary>(
       default: "approved"
     },
     creator: { type: String, required: true },
+    creatorName: { type: String, default: "AuraTravel Planner" },
+    creatorBio: { type: String, default: "Professional Travel Curator" },
+    creatorAvatar: { type: String },
+    creatorExperience: { type: Number, default: 5 },
     dailyPlan: [DailyActivitySchema]
   },
   {

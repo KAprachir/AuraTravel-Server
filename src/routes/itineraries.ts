@@ -164,7 +164,11 @@ router.post("/", requireAuth, requireRole(["planner", "admin"]), async (req: Aut
       category,
       dailyPlan: dailyPlan || [],
       creator: req.user?.id,
-      rating: 4.5,
+      creatorName: req.user?.name || "AuraTravel Planner",
+      creatorBio: (req.user as any)?.bio || "Professional Travel Curator",
+      creatorAvatar: (req.user as any)?.image || (req.user as any)?.avatar,
+      creatorExperience: (req.user as any)?.yearsOfExperience || 5,
+      rating: 4.8,
       isPublic: isPublicBool,
       status: approvalStatus
     });
